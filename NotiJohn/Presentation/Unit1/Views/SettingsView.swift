@@ -118,6 +118,23 @@ struct SettingsView: View {
                     .foregroundStyle(.red)
             }
         }
+
+        Section("Debug — Captured Notifications") {
+            NavigationLink {
+                DebugNotificationListView(
+                    viewModel: DebugNotificationListViewModel(
+                        listService: container.unit4.listService,
+                        detailService: container.unit4.detailService,
+                        managementService: container.unit4.managementService
+                    )
+                )
+            } label: {
+                Label("View captured notifications", systemImage: "tray.full")
+            }
+            Text("iPhone-side mirror of the CarPlay list. Useful for verifying the capture pipeline without CarPlay.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
     }
 
     private func sendDebugNotification() async {
@@ -125,6 +142,13 @@ struct SettingsView: View {
             debugError = "Invalid bundle ID."
             return
         }
+        // Debug ergonomics: ensure this bundle is in the in-memory filter so
+        // the simulate button always succeeds, regardless of whether the user
+        // has toggled the corresponding row in "Monitored Apps". Has no
+        // persistence side-effect — the next cold launch will rebuild the
+        // filter from saved settings only.
+        container.unit2.monitoredAppFilter.addApp(bundleId: bundleId)
+
         do {
             try await container.unit2.captureService.handleIncomingNotification(
                 bundleId: bundleId,

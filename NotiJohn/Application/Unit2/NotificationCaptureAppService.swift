@@ -41,7 +41,12 @@ public final class NotificationCaptureAppService {
         body: String
     ) async throws {
         // 1. App filter — drop notifications from apps the user hasn't enabled.
-        guard filterPolicy.shouldCapture(bundleId: bundleId) else { return }
+        guard filterPolicy.shouldCapture(bundleId: bundleId) else {
+            #if DEBUG
+            print("[NotiJohn] Capture rejected — \(bundleId.value) not in MonitoredAppFilter. Enable it in Settings, or it'll never appear.")
+            #endif
+            return
+        }
 
         // 2. Build the aggregate + the corresponding domain event.
         let sourceApp = SourceApp(bundleId: bundleId, appName: appName, appIcon: appIcon)
