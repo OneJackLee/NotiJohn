@@ -48,6 +48,23 @@ public final class AppMonitoringAppService {
         }
     }
 
+    /// Re-broadcasts `AppMonitoringEnabled` for every app currently flagged as
+    /// enabled in persisted settings. Must be called once at app launch so
+    /// `MonitoredAppFilter` (in-memory, lives only for the process lifetime)
+    /// gets populated to match the user's previous selections — otherwise
+    /// every incoming notification is silently dropped on cold start.
+    public func republishCurrentSettings() async {
+        let settings = await settingsRepo.get()
+        let now = Date()
+        for app in settings.monitoredApps where app.isEnabled {
+            eventBus.publish(AppMonitoringEnabled(
+                bundleId: app.bundleId,
+                appName: app.appInfo.displayName,
+                occurredAt: now
+            ))
+        }
+    }
+
     /// Reconciles the persisted selection with the currently-installed apps,
     /// publishing `AppMonitoringDisabled` events for any uninstalled apps.
     @discardableResult

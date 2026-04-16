@@ -44,6 +44,13 @@ public final class AppContainer {
         unit2.startEventSubscriptions()
         unit3.startEventSubscriptions()
 
+        // Rehydrate Unit 2's in-memory `MonitoredAppFilter` from Unit 1's
+        // persisted selections. Without this, every cold launch starts with
+        // an empty filter and silently drops all incoming notifications.
+        // Fire-and-forget — completes in microseconds; no UI work depends
+        // on it before the user can interact.
+        Task { await unit1.appMonitoringService.republishCurrentSettings() }
+
         // Register the CarPlay-eligible notification category. Must happen
         // before any banner is posted, otherwise the system will fall back to
         // the default category which is not surfaced on the CarPlay screen.
