@@ -31,6 +31,15 @@ playground.xcworkspace
 
 .build/
 
+# Xcode generated artifacts
+build/
+DerivedData/
+NotiJohn.xcodeproj/
+*.xcworkspace/
+
+# macOS
+.DS_Store
+
 # CocoaPods
 #
 # We recommend against adding the Pods directory to your .gitignore. However
