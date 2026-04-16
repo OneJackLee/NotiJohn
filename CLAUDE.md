@@ -70,7 +70,7 @@ Notes:
 - iOS 17.0 deployment target, Swift 5.9.
 - Bundle IDs: `com.onejacklee.notijohn` (app), `com.onejacklee.notijohn.nse` (extension).
 - App Group: `group.com.onejacklee.notijohn`.
-- CarPlay entitlement key (`com.apple.developer.carplay-messaging`) is declared but not provisioned. Simulator OK; physical CarPlay head-unit testing requires Apple-issued entitlement.
+- CarPlay entitlement key (`com.apple.developer.carplay-communication`) is declared but not provisioned. The Simulator's CarPlay window does **not** show NotiJohn either — Apple gates third-party CarPlay scenes on the entitlement on both Simulator and hardware. Use the iPhone-side `Presentation/Debug/DebugNotificationListView` to validate the pipeline end-to-end. See `README.md` "Known blockers → B-1".
 
 ## 5. Conventions
 
