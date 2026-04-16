@@ -44,6 +44,11 @@ public final class AppContainer {
         unit2.startEventSubscriptions()
         unit3.startEventSubscriptions()
 
+        // Register the CarPlay-eligible notification category. Must happen
+        // before any banner is posted, otherwise the system will fall back to
+        // the default category which is not surfaced on the CarPlay screen.
+        unit3.bannerService.registerCategories()
+
         // Hand the CarPlay scene delegate (instantiated by UIKit, not DI) the
         // collaborators it needs. Must run before CarPlay connects.
         CarPlaySceneDelegate.sceneServices = .init(

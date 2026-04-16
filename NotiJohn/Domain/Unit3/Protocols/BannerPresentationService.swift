@@ -11,4 +11,13 @@ public protocol BannerPresentationService: AnyObject, Sendable {
     /// Removes a previously displayed banner identified by `notificationId`.
     /// Safe to call even if the banner has already been dismissed.
     func dismiss(notificationId: NotificationId) async
+
+    /// One-time startup hook. Production registers a notification category
+    /// with `.allowInCarPlay` so the system surfaces banners on CarPlay.
+    /// Default no-op for tests / non-CarPlay implementations.
+    func registerCategories()
+}
+
+public extension BannerPresentationService {
+    func registerCategories() {}
 }

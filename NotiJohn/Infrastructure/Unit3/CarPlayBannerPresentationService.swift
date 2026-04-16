@@ -16,6 +16,19 @@ public final class CarPlayBannerPresentationService: BannerPresentationService, 
         self.center = center
     }
 
+    /// Registers the `NOTIJOHN_BANNER` category with `.allowInCarPlay` so the
+    /// system surfaces our local notifications on the CarPlay screen. Must run
+    /// once at app launch — `AppContainer.init` does this.
+    public func registerCategories() {
+        let category = UNNotificationCategory(
+            identifier: Self.categoryIdentifier,
+            actions: [],
+            intentIdentifiers: [],
+            options: [.allowInCarPlay]
+        )
+        center.setNotificationCategories([category])
+    }
+
     public func show(banner: NotificationBanner) async {
         let content = UNMutableNotificationContent()
         content.title = banner.sourceAppName
